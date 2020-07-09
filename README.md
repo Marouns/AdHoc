@@ -11,11 +11,12 @@ OVERVIEW
 
 The Project is using data from: https://github.com/iai-group/www2018-table
 
-Default path for tables in project is: "C:\\WP_tables\\tables_redi2_1"
+Default path for tables in project is: "C:\\WP_tables\\tables_redi2_1" which can be changed in Const class, or sent as arg from main
 
 There are two main that can be run:
 
 1) In AdHocTester: which searches for the queries that are saved in queries.txt
+   The run will output and output.txt file with table score of top 20 tables for each query.
 
-2) In FrameMain: a very simple UI may include bugs, all runs on the same thread which will freeze the UI (needs an MVVM redesign).
+2) In FrameMain: a very simple UI that may include bugs, UI may freeze, all on the same thread which will (needs an MVVM redesign).
 
