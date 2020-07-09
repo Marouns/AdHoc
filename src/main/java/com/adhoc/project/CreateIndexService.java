@@ -5,7 +5,7 @@ import java.io.IOException;
 public class CreateIndexService {
 
 
-    public static void createIndex(String dataDir, String targetDir) throws IOException {
+    public static void createIndex(String dataDir, String targetDir) throws Exception {
 
         Indexer indexer;
         if(dataDir == null) {

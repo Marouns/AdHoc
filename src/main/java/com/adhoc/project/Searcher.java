@@ -63,6 +63,9 @@ public class Searcher {
         searchQuery = String.join(" ", allQueryWords);
 
         try {
+            if(searchQuery.isEmpty() || searchQuery == null) {
+                return null;
+            }
             query = queryParser.parse(searchQuery);
         } catch (org.apache.lucene.queryparser.classic.ParseException e) {
             e.printStackTrace();

@@ -1,6 +1,7 @@
 package com.adhoc.project;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -33,5 +34,14 @@ public class FileHelper {
             return queriesDict;
         }
         return null;
+    }
+
+    public static void outputToFile(List<String> data) throws IOException {
+        FileWriter outputFile = new FileWriter("output.txt");
+        for(String line : data) {
+            outputFile.write(line);
+        }
+        outputFile.close();
+
     }
 }

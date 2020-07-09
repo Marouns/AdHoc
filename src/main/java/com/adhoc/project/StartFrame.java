@@ -1,21 +1,26 @@
 package com.adhoc.project;
 
+import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.TopDocs;
+
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
-import java.text.ParseException;
+import java.util.ArrayList;
 
 public class StartFrame extends JFrame{
     private JButton SearchButton  = new JButton("Search");
 
 
-
+    private  ArrayList<String> allResults = null;
     private JLabel lblA = new JLabel("Enter query :");
     private JLabel lblB = new JLabel("Data Path :");
     private JLabel lblC = new JLabel("Index Path :");
     private JLabel errorLabel = new JLabel();
+    private JTextArea results = new JTextArea();
+
 
     JCheckBox c1 = new JCheckBox("Index data", false);
     JTextField searchTextField = new JTextField();
@@ -34,7 +39,6 @@ public class StartFrame extends JFrame{
     }
 
     private void initComponent(){
-
         searchTextField = new JTextField();
         dataPathField = new JTextField();
         indexPathField = new JTextField();
@@ -54,6 +58,11 @@ public class StartFrame extends JFrame{
 
         dataPathField.setText(Consts.dataDir);
         indexPathField.setText(Consts.indexDir);
+        errorLabel.setBounds(20,200, 200,25);
+        results.setBounds(20, 250, 600, 300);
+        results.setBorder(new LineBorder(Color.BLACK));
+        results.setLineWrap(true);
+        results.setWrapStyleWord(true);
 
         add(lblA);
         add(searchTextField);
@@ -63,10 +72,9 @@ public class StartFrame extends JFrame{
         add(indexPathField);
         add(c1);
         add(errorLabel);
-
-
         add(SearchButton);
-        errorLabel.setBounds(20,200, 200,25);
+        add(results);
+
     }
 
     private void initEvent(){
@@ -79,13 +87,19 @@ public class StartFrame extends JFrame{
 
         SearchButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                btnSearchClick(e);
+                try {
+                    btnSearchClick(e);
+                } catch (Exception exception) {
+                    exception.printStackTrace();
+                }
             }
         });
 
     }
 
-    private void btnSearchClick(ActionEvent event){
+    private void btnSearchClick(ActionEvent event) throws Exception {
+
+        allResults = new ArrayList<String>();
         if(c1.isSelected()) {
 
             try {
@@ -99,7 +113,13 @@ public class StartFrame extends JFrame{
             try {
                 Searcher searcher = new Searcher(indexPathField.getText());
                 searcher.init();
-                searcher.search(searchTextField.getText());
+                TopDocs topDocs = searcher.search(searchTextField.getText());
+
+                for(ScoreDoc doc : topDocs.scoreDocs) {
+                    allResults.add(searcher.getDocument(doc).get(LuceneConstants.TABLE_ID));
+                }
+                results.removeAll();
+                results.setText(String.join("\t", allResults));
             } catch (Exception e) {
                 e.printStackTrace();
                 errorLabel.setText(e.getMessage());
